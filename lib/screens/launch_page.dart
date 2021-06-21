@@ -9,7 +9,9 @@ import 'package:rocketfire/utils/app_graphql.dart';
 import 'package:rocketfire/utils/app_logger.dart';
 import 'package:rocketfire/utils/fonts.dart';
 import 'package:rocketfire/utils/graphql_queries.dart';
+import 'package:supercharged/supercharged.dart';
 import 'package:unicons/unicons.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class LaunchPage extends StatefulWidget {
   final String launchId;
@@ -29,12 +31,17 @@ class _LaunchPageState extends State<LaunchPage> {
   bool _isLoading = false;
   Launch? _launch;
 
+  YoutubePlayerController? _ytController;
+
+  ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
 
     if (widget.launch != null) {
       _launch = widget.launch;
+      initVideoPlayer();
       return;
     }
 
@@ -42,9 +49,17 @@ class _LaunchPageState extends State<LaunchPage> {
   }
 
   @override
+  void dispose() {
+    _ytController?.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: fab(),
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: [
           MainAppBar(),
           body(),
@@ -65,15 +80,27 @@ class _LaunchPageState extends State<LaunchPage> {
     return idleView();
   }
 
-  Widget loadingView() {
-    return Center(
-      child: Text("Loading..."),
-    );
-  }
-
   Widget errorView() {
     return Text(
       "Sorry, an error ocurred while loading space data.",
+    );
+  }
+
+  Widget fab() {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        _scrollController.animateTo(
+          0.0,
+          duration: 250.milliseconds,
+          curve: Curves.decelerate,
+        );
+      },
+      label: Text(
+        "scroll to top",
+        style: FontsUtils.mainStyle(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
   }
 
@@ -127,9 +154,32 @@ class _LaunchPageState extends State<LaunchPage> {
                   ],
                 ),
               ),
+              videoWidget(),
             ],
           ),
         ]),
+      ),
+    );
+  }
+
+  Widget loadingView() {
+    return Center(
+      child: Text("Loading..."),
+    );
+  }
+
+  Widget videoWidget() {
+    if (_ytController == null) {
+      return Container();
+    }
+
+    return Container(
+      padding: const EdgeInsets.only(top: 70.0, bottom: 100.0),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: YoutubePlayerIFrame(
+        controller: _ytController,
+        aspectRatio: 16 / 9,
       ),
     );
   }
@@ -164,10 +214,25 @@ class _LaunchPageState extends State<LaunchPage> {
 
       final launchMapData = launchPast as dynamic;
       _launch = Launch.fromJSON(launchMapData);
+
+      initVideoPlayer();
     } catch (error) {
       appLogger.e(error);
     } finally {
       setState(() => _isLoading = false);
     }
+  }
+
+  void initVideoPlayer() async {
+    final videoStr = _launch!.links.video;
+    final videoId = videoStr.substring(videoStr.lastIndexOf('/') + 1);
+
+    _ytController = YoutubePlayerController(
+      initialVideoId: videoId,
+      params: YoutubePlayerParams(
+        showControls: true,
+        showFullscreenButton: true,
+      ),
+    );
   }
 }
