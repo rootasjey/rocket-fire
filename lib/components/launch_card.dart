@@ -5,8 +5,13 @@ import 'package:rocketfire/utils/fonts.dart';
 
 class LaunchCard extends StatefulWidget {
   final Launch launch;
+  final Function()? onTap;
 
-  const LaunchCard({Key? key, required this.launch}) : super(key: key);
+  const LaunchCard({
+    Key? key,
+    required this.launch,
+    this.onTap,
+  }) : super(key: key);
 
   @override
   _LaunchCardState createState() => _LaunchCardState();
@@ -28,7 +33,7 @@ class _LaunchCardState extends State<LaunchCard> {
         side: BorderSide(color: _borderColor, width: 2.0),
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: widget.onTap,
         onHover: (isHover) {
           if (isHover) {
             setState(() {

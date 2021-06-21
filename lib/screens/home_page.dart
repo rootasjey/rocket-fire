@@ -1,14 +1,17 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:rocketfire/components/footer.dart';
 import 'package:rocketfire/components/launch_card.dart';
 import 'package:rocketfire/components/main_app_bar.dart';
+import 'package:rocketfire/router/app_router.dart';
 import 'package:rocketfire/state/colors.dart';
 import 'package:rocketfire/types/launch.dart';
 import 'package:rocketfire/utils/app_graphql.dart';
 import 'package:rocketfire/utils/app_logger.dart';
 import 'package:rocketfire/utils/fonts.dart';
+import 'package:rocketfire/utils/graphql_queries.dart';
 import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -22,28 +25,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _isLoading = false;
   final _launches = <Launch>[];
-
-  final String getPastLaunches = r'''
-   query GetPastLaunches($limit: Int!) {
-    launchesPast(limit: $limit, order: "desc", sort: "launch_date_local") {
-      id
-      mission_name
-      launch_date_local
-      links {
-        article_link
-        video_link
-      }
-      rocket {
-        rocket_name
-      }
-      ships {
-        name
-        home_port
-        image
-      }
-    }
-  }
-  ''';
 
   @override
   initState() {
@@ -225,7 +206,17 @@ class _HomePageState extends State<HomePage> {
             spacing: 24.0,
             runSpacing: 24.0,
             children: _launches.map((launch) {
-              return LaunchCard(launch: launch);
+              return LaunchCard(
+                launch: launch,
+                onTap: () {
+                  context.router.push(
+                    LaunchPageRoute(
+                      launchId: launch.id,
+                      launch: launch,
+                    ),
+                  );
+                },
+              );
             }).toList(),
           ),
         ],
@@ -242,7 +233,7 @@ class _HomePageState extends State<HomePage> {
     const int limit = 3;
 
     final QueryOptions options = QueryOptions(
-      document: gql(getPastLaunches),
+      document: gql(GraphQLQueries.getPastLaunches),
       variables: <String, dynamic>{
         'limit': limit,
       },
@@ -252,7 +243,7 @@ class _HomePageState extends State<HomePage> {
       final QueryResult queryResult = await appGraphQL.client.query(options);
 
       if (queryResult.hasException) {
-        handleGraphQLException(queryResult.exception);
+        appGraphQL.handleGraphQLException(queryResult.exception);
         return;
       }
 
@@ -272,13 +263,5 @@ class _HomePageState extends State<HomePage> {
     } finally {
       setState(() => _isLoading = false);
     }
-  }
-
-  void handleGraphQLException(OperationException? exception) {
-    if (exception == null) {
-      throw "An error ocurred while fetching past launches. Please try again.";
-    }
-
-    throw exception;
   }
 }

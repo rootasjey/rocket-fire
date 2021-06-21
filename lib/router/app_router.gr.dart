@@ -11,6 +11,7 @@ import '../screens/about_page.dart' as _i4;
 import '../screens/home_page.dart' as _i3;
 import '../screens/launch_page.dart' as _i5;
 import '../screens/launches_page.dart' as _i6;
+import '../types/launch.dart' as _i7;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter([_i2.GlobalKey<_i2.NavigatorState>? navigatorKey])
@@ -41,7 +42,8 @@ class AppRouter extends _i1.RootStackRouter {
           final args = data.argsAs<LaunchPageRouteArgs>(
               orElse: () => LaunchPageRouteArgs(
                   launchId: pathParams.getString('launchId')));
-          return _i5.LaunchPage(key: args.key, launchId: args.launchId);
+          return _i5.LaunchPage(
+              key: args.key, launchId: args.launchId, launch: args.launch);
         },
         transitionsBuilder: _i1.TransitionsBuilders.fadeIn,
         opaque: true,
@@ -78,21 +80,24 @@ class AboutPageRoute extends _i1.PageRouteInfo {
 }
 
 class LaunchPageRoute extends _i1.PageRouteInfo<LaunchPageRouteArgs> {
-  LaunchPageRoute({_i2.Key? key, required String launchId})
+  LaunchPageRoute({_i2.Key? key, required String launchId, _i7.Launch? launch})
       : super(name,
             path: '/launch/:launchId',
-            args: LaunchPageRouteArgs(key: key, launchId: launchId),
+            args: LaunchPageRouteArgs(
+                key: key, launchId: launchId, launch: launch),
             rawPathParams: {'launchId': launchId});
 
   static const String name = 'LaunchPageRoute';
 }
 
 class LaunchPageRouteArgs {
-  const LaunchPageRouteArgs({this.key, required this.launchId});
+  const LaunchPageRouteArgs({this.key, required this.launchId, this.launch});
 
   final _i2.Key? key;
 
   final String launchId;
+
+  final _i7.Launch? launch;
 }
 
 class LaunchesPageRoute extends _i1.PageRouteInfo {

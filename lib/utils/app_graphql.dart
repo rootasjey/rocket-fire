@@ -11,6 +11,14 @@ class AppGraphQL {
   );
 
   GraphQLClient get client => _client;
+
+  void handleGraphQLException(OperationException? exception) {
+    if (exception == null) {
+      throw "An error ocurred while fetching past launches. Please try again.";
+    }
+
+    throw exception;
+  }
 }
 
 final appGraphQL = AppGraphQL();
