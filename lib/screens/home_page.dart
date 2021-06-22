@@ -13,6 +13,7 @@ import 'package:rocketfire/utils/app_logger.dart';
 import 'package:rocketfire/utils/constants.dart';
 import 'package:rocketfire/utils/fonts.dart';
 import 'package:rocketfire/utils/graphql_queries.dart';
+import 'package:supercharged/supercharged.dart';
 import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,6 +30,8 @@ class _HomePageState extends State<HomePage> {
 
   final int _limit = 3;
 
+  final _scrollController = ScrollController();
+
   @override
   initState() {
     super.initState();
@@ -38,13 +41,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: CustomScrollView(
-      slivers: [
-        MainAppBar(),
-        body(),
-        footer(),
-      ],
-    ));
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          MainAppBar(),
+          body(),
+          footer(),
+        ],
+      ),
+    );
   }
 
   Widget body() {
@@ -124,7 +129,14 @@ class _HomePageState extends State<HomePage> {
             right: 0,
             bottom: 80.0,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                final double offset = MediaQuery.of(context).size.height;
+                _scrollController.animateTo(
+                  offset,
+                  duration: 500.milliseconds,
+                  curve: Curves.decelerate,
+                );
+              },
               icon: Icon(UniconsLine.arrow_down),
             ),
           ),
