@@ -2,6 +2,11 @@
 
 A demo app using unofficial [SpaceX GraphQL API](https://github.com/SpaceXLand/api).
 
+| desktop | mobile |
+|---------|--------|
+| ![screenshot home desktop 01](./screenshots/home_desktop_01.png) | ![screenshot home mobile 01](./screenshots/home_mobile_01.png) |
+| ![screenshot home desktop 02](./screenshots/home_desktop_02.png) | ![screenshot home mobile 02](./screenshots/home_mobile_02.png)
+
 ## Build
 
 Prerequisites: 
