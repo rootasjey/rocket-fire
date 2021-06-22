@@ -17,7 +17,7 @@ class Rocket {
     }
 
     return Rocket(
-      name: data['rocket_name'],
+      name: data['rocket_name'] ?? '',
     );
   }
 }

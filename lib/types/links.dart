@@ -20,8 +20,8 @@ class Links {
     }
 
     return Links(
-      article: data['article_link'],
-      video: data['video_link'],
+      article: data['article_link'] ?? '',
+      video: data['video_link'] ?? '',
     );
   }
 }

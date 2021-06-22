@@ -36,9 +36,9 @@ class Launch {
     }
 
     return Launch(
-      missionName: data['mission_name'],
+      missionName: data['mission_name'] ?? '',
       launchDateLocal: DateTime.parse(data['launch_date_local']),
-      id: data['id'],
+      id: data['id'] ?? '',
       links: Links.fromJSON(data['links']),
       rocket: Rocket.fromJSON(data['rocket']),
       ships: parseShips(data['ships']),

@@ -23,9 +23,9 @@ class Ship {
     }
 
     return Ship(
-      name: data['name'],
-      homePort: data['home_port'],
-      image: data['image'],
+      name: data['name'] ?? '',
+      homePort: data['home_port'] ?? '',
+      image: data['image'] ?? '',
     );
   }
 }
