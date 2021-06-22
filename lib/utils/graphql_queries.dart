@@ -1,7 +1,7 @@
 class GraphQLQueries {
   static const String getPastLaunches = r'''
-  query GetPastLaunches($limit: Int!) {
-    launchesPast(limit: $limit, order: "desc", sort: "launch_date_local") {
+  query GetPastLaunches($limit: Int!, $offset: Int!) {
+    launchesPast(limit: $limit, offset: $offset, order: "desc", sort: "launch_date_local") {
       id
       mission_name
       launch_date_local

@@ -10,6 +10,7 @@ import 'package:rocketfire/state/colors.dart';
 import 'package:rocketfire/types/launch.dart';
 import 'package:rocketfire/utils/app_graphql.dart';
 import 'package:rocketfire/utils/app_logger.dart';
+import 'package:rocketfire/utils/constants.dart';
 import 'package:rocketfire/utils/fonts.dart';
 import 'package:rocketfire/utils/graphql_queries.dart';
 import 'package:unicons/unicons.dart';
@@ -25,6 +26,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _isLoading = false;
   final _launches = <Launch>[];
+
+  final int _limit = 3;
 
   @override
   initState() {
@@ -80,6 +83,8 @@ class _HomePageState extends State<HomePage> {
     final pageHeight = MediaQuery.of(context).size.height;
     final pageWidth = MediaQuery.of(context).size.width;
 
+    final showRocketIcon = pageWidth > 600.0;
+
     return Container(
       height: pageHeight,
       width: pageWidth,
@@ -98,13 +103,20 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               heroTexts(),
-              Padding(
-                padding: const EdgeInsets.only(left: 80.0, bottom: 80.0),
-                child: Opacity(
-                  opacity: 0.8,
-                  child: Icon(UniconsLine.rocket, size: 120.0),
+              if (showRocketIcon)
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 80.0,
+                    bottom: 80.0,
+                  ),
+                  child: Opacity(
+                    opacity: 0.8,
+                    child: Icon(
+                      UniconsLine.rocket,
+                      size: 120.0,
+                    ),
+                  ),
                 ),
-              ),
             ],
           ),
           Positioned(
@@ -122,9 +134,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget heroTexts() {
+    final double pageWidth = MediaQuery.of(context).size.width;
+    double width = 600.0;
+    EdgeInsets padding = const EdgeInsets.all(80.0);
+
+    if (pageWidth < Constants.maxMobileWidth) {
+      width = pageWidth;
+      padding = const EdgeInsets.only(left: 24.0, right: 24.0, top: 42.0);
+    }
+
     return Container(
-      width: 600.0,
-      padding: const EdgeInsets.all(90.0),
+      width: width,
+      padding: padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -186,11 +207,20 @@ class _HomePageState extends State<HomePage> {
       return loadingView();
     }
 
+    final double pageWidth = MediaQuery.of(context).size.width;
+    EdgeInsets padding = const EdgeInsets.all(80.0);
+    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.start;
+
+    if (pageWidth < Constants.maxMobileWidth) {
+      padding = const EdgeInsets.only(left: 24.0, right: 24.0, top: 42.0);
+      crossAxisAlignment = CrossAxisAlignment.center;
+    }
+
     return Container(
       height: MediaQuery.of(context).size.height,
-      padding: const EdgeInsets.all(80.0),
+      padding: padding,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: crossAxisAlignment,
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 42.0),
@@ -230,12 +260,11 @@ class _HomePageState extends State<HomePage> {
       _launches.clear();
     });
 
-    const int limit = 3;
-
     final QueryOptions options = QueryOptions(
       document: gql(GraphQLQueries.getPastLaunches),
       variables: <String, dynamic>{
-        'limit': limit,
+        'limit': _limit,
+        'offset': 0,
       },
     );
 

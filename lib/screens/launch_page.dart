@@ -88,6 +88,7 @@ class _LaunchPageState extends State<LaunchPage> {
 
   Widget fab() {
     return FloatingActionButton.extended(
+      backgroundColor: stateColors.primary,
       onPressed: () {
         _scrollController.animateTo(
           0.0,

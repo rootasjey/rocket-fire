@@ -4,6 +4,9 @@ import 'package:rocketfire/types/launch.dart';
 import 'package:rocketfire/utils/fonts.dart';
 
 class LaunchCard extends StatefulWidget {
+  final double width;
+  final double height;
+
   final Launch launch;
   final Function()? onTap;
 
@@ -11,6 +14,8 @@ class LaunchCard extends StatefulWidget {
     Key? key,
     required this.launch,
     this.onTap,
+    this.width = 300.0,
+    this.height = 130.0,
   }) : super(key: key);
 
   @override
@@ -19,6 +24,7 @@ class LaunchCard extends StatefulWidget {
 
 class _LaunchCardState extends State<LaunchCard> {
   double _elevation = 0.0;
+  double _borderWidth = 2.0;
   Color _borderColor = Colors.blue.shade700;
 
   @override
@@ -30,7 +36,10 @@ class _LaunchCardState extends State<LaunchCard> {
       color: Colors.black26,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0.0),
-        side: BorderSide(color: _borderColor, width: 2.0),
+        side: BorderSide(
+          color: _borderColor,
+          width: _borderWidth,
+        ),
       ),
       child: InkWell(
         onTap: widget.onTap,
@@ -39,6 +48,7 @@ class _LaunchCardState extends State<LaunchCard> {
             setState(() {
               _elevation = 2.0;
               _borderColor = Colors.pink;
+              _borderWidth = 3.0;
             });
 
             return;
@@ -47,11 +57,12 @@ class _LaunchCardState extends State<LaunchCard> {
           setState(() {
             _elevation = 0.0;
             _borderColor = Colors.blue.shade700;
+            _borderWidth = 2.0;
           });
         },
         child: Container(
-          width: 300.0,
-          height: 130.0,
+          width: widget.width,
+          height: widget.height,
           padding: const EdgeInsets.all(28.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
