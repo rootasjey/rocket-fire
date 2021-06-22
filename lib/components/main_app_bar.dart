@@ -62,11 +62,11 @@ class _MainAppBarState extends State<MainAppBar> {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         sectionButton(
-          // onPressed: () => context.router.root.push(IllustrationsRouter()),
+          onPressed: () => context.router.root.push(LaunchesPageRoute()),
           text: "launches".tr(),
         ),
         sectionButton(
-          // onPressed: () => context.router.root.push(IllustrationsRouter()),
+          onPressed: () => context.router.root.push(AboutPageRoute()),
           text: "about".tr(),
         ),
         sectionButton(
