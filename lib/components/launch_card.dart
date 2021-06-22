@@ -83,6 +83,8 @@ class _LaunchCardState extends State<LaunchCard> {
                 opacity: 0.4,
                 child: Text(
                   Jiffy(launch.launchDateLocal).yMMMMEEEEd,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: FontsUtils.mainStyle(
                     fontWeight: FontWeight.w200,
                   ),

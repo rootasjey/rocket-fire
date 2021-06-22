@@ -126,7 +126,7 @@ class _LaunchesPageState extends State<LaunchesPage> {
           childCount: _launches.length,
         ),
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          mainAxisExtent: 140.0,
+          mainAxisExtent: 150.0,
           maxCrossAxisExtent: 340.0,
           childAspectRatio: 1.5,
           mainAxisSpacing: 16.0,
