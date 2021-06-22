@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rocketfire/components/app_icon.dart';
 import 'package:rocketfire/router/app_router.gr.dart';
 import 'package:rocketfire/state/colors.dart';
+import 'package:rocketfire/utils/constants.dart';
 import 'package:rocketfire/utils/fonts.dart';
 import 'package:unicons/unicons.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -41,7 +42,7 @@ class _FooterState extends State<Footer> {
           Divider(
             height: 20.0,
             thickness: 1.0,
-            color: Colors.black38,
+            color: stateColors.primary,
           ),
           copyright(),
           editorial(),
@@ -82,9 +83,7 @@ class _FooterState extends State<Footer> {
         ),
         textLink(
           label: "GitHub",
-          onPressed: () {
-            launch('https://github.com/rootasjey/rootasjey.dev');
-          },
+          onPressed: () => launch(Constants.appGithubUrl),
         ),
       ],
     );
